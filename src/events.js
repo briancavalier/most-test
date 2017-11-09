@@ -11,9 +11,6 @@ export type Events<E, A> = Ended<A> | Errored <E, A>
 export const event = <A> (time: Time, value: A): Event<A> =>
   ({ time, value })
 
-export const empty = <E, A> (): Events<E, A> =>
-  new Ended([], 0)
-
 export const ended = <E, A> (events: Event<A>[], time: Time): Events<E, A> =>
   new Ended(events, time)
 

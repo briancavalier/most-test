@@ -2,7 +2,7 @@
 import { describe, it } from 'mocha'
 import { eq } from '@briancavalier/assert'
 
-import { type Events, Ended, event, ended } from './events'
+import { type Events, Ended, event, ended, errored } from './events'
 import type { Disposable, Time, Sink, Scheduler } from '@most/types'
 import { delay } from '@most/scheduler'
 
@@ -12,6 +12,14 @@ import { testScheduler } from './testScheduler'
 describe('collectEvents', () => {
   it('given ended should collect events and end time', () => {
     const expected = ended([event(0, 0), event(1, 1)], 2)
+    const s = new TestStream(expected)
+
+    return collectEvents(s, testScheduler()).then(actual => eq(expected, actual))
+  })
+
+  it('given errored should collect events, error, and end time', () => {
+    const expectedError = new Error()
+    const expected = errored(expectedError, [event(0, 0), event(1, 1)], 2)
     const s = new TestStream(expected)
 
     return collectEvents(s, testScheduler()).then(actual => eq(expected, actual))
